@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Administration | Empire Drive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <!-- Configuration manquante -->
+  <main id="setup" class="center" hidden>
+    <div class="panel narrow">
+      <h1>Firebase n'est pas encore configuré</h1>
+      <p>Ouvre <code>js/firebase-config.js</code> et remplace les valeurs « VOTRE_… » par celles de ton projet Firebase. Les étapes sont détaillées dans <code>README.md</code>.</p>
+    </div>
+  </main>
+
+  <!-- Connexion -->
+  <main id="login" class="center" hidden>
+    <form id="login-form" class="panel narrow" novalidate>
+      <div class="brand"><strong>Empire Drive</strong><small>Espace administrateur</small></div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="password">Mot de passe</label>
+        <input id="password" type="password" autocomplete="current-password" required>
+      </div>
+      <button class="btn btn-red btn-block" type="submit">Se connecter</button>
+      <button id="reset-btn" class="link-btn" type="button">Mot de passe oublié ou première connexion ?</button>
+      <p id="login-error" class="msg error" role="alert" hidden></p>
+      <p id="login-info" class="msg" role="status" hidden></p>
+    </form>
+  </main>
+
+  <!-- Application -->
+  <div id="app" hidden>
+    <header class="topbar">
+      <div class="wrap topbar-inner">
+        <div class="brand"><strong>Empire Drive</strong><small>Administration</small></div>
+        <div class="topbar-right">
+          <a class="link-light" href="index.html" target="_blank" rel="noopener">Voir le site</a>
+          <span id="who" class="who"></span>
+          <button id="logout" class="btn btn-ghost" type="button">Déconnexion</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" id="tab-vehicles" aria-selected="true" aria-controls="panel-vehicles">Véhicules <span id="count-vehicles" class="count">0</span></button>
+        <button class="tab" role="tab" id="tab-bookings" aria-selected="false" aria-controls="panel-bookings">Réservations <span id="count-new" class="count count-red" hidden>0</span></button>
+      </div>
+
+      <p id="app-error" class="msg error" role="alert" hidden></p>
+
+      <!-- Véhicules -->
+      <section id="panel-vehicles" role="tabpanel" aria-labelledby="tab-vehicles">
+        <form id="vehicle-form" class="panel" novalidate>
+          <h2 id="form-title">Ajouter un véhicule</h2>
+          <div class="grid">
+            <div class="field">
+              <label for="v-name">Nom du véhicule</label>
+              <input id="v-name" type="text" placeholder="Ford Fusion" required>
+            </div>
+            <div class="field">
+              <label for="v-cat">Catégorie</label>
+              <select id="v-cat">
+                <option>Citadine</option><option>Berline</option><option>SUV</option>
+                <option>4x4</option><option>Minibus</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="v-price">Prix par jour (FCFA)</label>
+              <input id="v-price" type="number" min="0" step="500" placeholder="25000" required>
+            </div>
+            <div class="field">
+              <label for="v-seats">Places</label>
+              <input id="v-seats" type="number" min="1" max="60" value="5" required>
+            </div>
+            <div class="field">
+              <label for="v-trans">Boîte</label>
+              <select id="v-trans"><option>Automatique</option><option>Manuelle</option></select>
+            </div>
+            <div class="field">
+              <label for="v-fuel">Carburant</label>
+              <select id="v-fuel"><option>Essence</option><option>Diesel</option><option>Hybride</option><option>Électrique</option></select>
+            </div>
+          </div>
+
+          <div class="photo-row">
+            <div class="photo-preview" id="photo-preview"><span>Aucune photo</span></div>
+            <div class="field grow">
+              <label for="v-photo">Photo (de préférence PNG sans fond, voiture vue de 3/4)</label>
+              <input id="v-photo" type="file" accept="image/*">
+              <label class="check"><input id="v-available" type="checkbox" checked> Disponible à la location</label>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-red" type="submit" id="save-btn">Enregistrer le véhicule</button>
+            <button class="btn btn-ghost-dark" type="button" id="cancel-btn" hidden>Annuler la modification</button>
+          </div>
+          <p id="form-msg" class="msg" role="status" hidden></p>
+        </form>
+
+        <h2 class="list-title">Véhicules en ligne</h2>
+        <div id="vehicle-list" class="vlist"></div>
+      </section>
+
+      <!-- Réservations -->
+      <section id="panel-bookings" role="tabpanel" aria-labelledby="tab-bookings" hidden>
+        <h2 class="list-title">Demandes de réservation</h2>
+        <div id="booking-list" class="blist"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Empire Drive | Location de voitures à Dakar</title>
+  <meta name="description" content="Empire Drive, location de voitures à Dakar au Sénégal. Meilleurs prix du marché, avec ou sans chauffeur, aéroport et toutes destinations.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script>document.documentElement.classList.add("js");</script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="#top"><strong>Empire Drive</strong><small>Meilleurs prix du marché</small></a>
+      <nav class="nav" aria-label="Navigation principale">
+        <a href="#vehicules">Véhicules</a>
+        <a href="#services">Services</a>
+        <a href="#conditions">Conditions</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a class="btn btn-accent" href="#reserver">Réserver</a>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- Hero + formulaire -->
+    <section class="hero">
+      <!-- Décor animé : les voitures sont générées dans js/main.js -->
+      <div class="scene" id="scene" aria-hidden="true"></div>
+      <div class="container hero-inner">
+        <div class="hero-text">
+          <p class="eyebrow">Location · Dakar, Sénégal</p>
+          <h1>La voiture qu'il vous faut, <em>au meilleur prix.</em></h1>
+          <p class="lead">Véhicules récents et fiables, avec ou sans chauffeur, pour l'aéroport et toutes destinations. Réservez en quelques minutes.</p>
+          <p class="hero-price">À partir de <strong>25 000 FCFA</strong> / jour</p>
+          <div class="hero-actions">
+            <a class="btn btn-light" href="#vehicules">Voir les véhicules</a>
+            <a class="btn btn-outline" href="#contact">Nous appeler</a>
+          </div>
+        </div>
+
+        <form id="reserver" class="booking" novalidate>
+          <h2 class="booking-title">Demande de réservation</h2>
+
+          <div class="field">
+            <label for="city">Lieu de prise en charge</label>
+            <select id="city" name="city">
+              <option>Dakar centre</option>
+              <option>Aéroport AIBD</option>
+              <option>Saly</option>
+              <option>Saint-Louis</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="start">Départ</label>
+              <input id="start" name="start" type="date" required>
+            </div>
+            <div class="field">
+              <label for="end">Retour</label>
+              <input id="end" name="end" type="date" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="car">Véhicule</label>
+            <select id="car" name="car"></select>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="nom">Nom complet</label>
+              <input id="nom" name="nom" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="tel">Téléphone</label>
+              <input id="tel" name="tel" type="tel" placeholder="+221" autocomplete="tel" required>
+            </div>
+          </div>
+
+          <div class="estimate" aria-live="polite">
+            <span id="estimate-label">Choisissez vos dates pour voir le total estimé</span>
+            <strong id="estimate-total"></strong>
+          </div>
+
+          <button class="btn btn-dark btn-block" type="submit">Demander la réservation</button>
+          <p id="form-message" class="form-message" role="status" hidden></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- Flotte -->
+    <section id="vehicules" class="section">
+      <div class="container">
+        <h2 class="section-title">Notre flotte</h2>
+        <p class="section-intro">Tarifs par jour, assurance de base incluse. Seule la Ford Fusion est réelle ; les autres véhicules sont des exemples à remplacer (voir js/main.js).</p>
+        <div id="filters" class="filters" role="group" aria-label="Filtrer par catégorie"></div>
+        <div id="fleet" class="fleet"></div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="section section-white">
+      <div class="container">
+        <h2 class="section-title">Ce que nous faisons pour vous</h2>
+        <div class="services">
+          <div class="service">
+            <h3>Véhicules récents et fiables</h3>
+            <p>Une flotte entretenue et contrôlée avant chaque location, pour rouler l'esprit tranquille.</p>
+          </div>
+          <div class="service">
+            <h3>Avec ou sans chauffeur</h3>
+            <p>Conduisez vous-même ou confiez le volant à l'un de nos chauffeurs, en ville ou sur un long trajet.</p>
+          </div>
+          <div class="service">
+            <h3>Aéroport et toutes destinations</h3>
+            <p>Prise en charge à l'aéroport AIBD, à votre hôtel ou à votre adresse, puis partout au Sénégal.</p>
+          </div>
+          <div class="service">
+            <h3>Service rapide et sécurisé</h3>
+            <p>Réponse rapide par WhatsApp, contrat clair et assistance pendant toute la durée de la location.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Conditions -->
+    <section id="conditions" class="section">
+      <div class="container conditions">
+        <div>
+          <h2 class="section-title">Conditions de location</h2>
+          <p class="section-intro">Tout ce qu'il faut savoir avant de réserver. Ajustez ces points à votre activité.</p>
+        </div>
+        <dl class="terms">
+          <div><dt>Documents</dt><dd>Permis de conduire valide et pièce d'identité ou passeport.</dd></div>
+          <div><dt>Âge minimum</dt><dd>[ÂGE MINIMUM] ans, avec [NOMBRE] ans de permis.</dd></div>
+          <div><dt>Caution</dt><dd>[MONTANT DE LA CAUTION] FCFA, restituée au retour du véhicule.</dd></div>
+          <div><dt>Kilométrage</dt><dd>[KM INCLUS] km par jour, puis [PRIX] FCFA par km supplémentaire.</dd></div>
+          <div><dt>Carburant</dt><dd>Véhicule remis plein, à rendre plein.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact">
+      <div class="container contact-inner">
+        <div>
+          <h2 class="section-title">Parlons de votre trajet</h2>
+          <p class="lead">Réponse rapide par téléphone ou WhatsApp, tous les jours.</p>
+          <div class="contact-actions">
+            <a class="btn btn-accent" href="https://wa.me/221774729776" target="_blank" rel="noopener">Écrire sur WhatsApp</a>
+            <a class="btn btn-outline" href="tel:+221774729776">Appeler le 77 472 97 76</a>
+          </div>
+        </div>
+        <ul class="contact-list">
+          <li><span>Téléphone / WhatsApp</span>+221 77 472 97 76</li>
+          <li><span>Adresse</span>[VOTRE ADRESSE], Dakar</li>
+          <li><span>Horaires</span>[HORAIRES D'OUVERTURE]</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>Empire Drive, location de voitures à Dakar</span>
+      <span>Tarifs en francs CFA, taxes incluses</span>
+    </div>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
