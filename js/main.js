@@ -89,6 +89,94 @@ function renderFilters() {
   });
 }
 
+// --- Galerie photos (jusqu'à 8 par véhicule) ---
+function carImages(car) {
+  if (Array.isArray(car.images) && car.images.length) return car.images.filter(Boolean).slice(0, 8);
+  return car.image ? [car.image] : [];
+}
+
+let lb = null;
+function buildLightbox() {
+  lb = document.createElement("div");
+  lb.className = "lb";
+  lb.hidden = true;
+  lb.setAttribute("role", "dialog");
+  lb.setAttribute("aria-modal", "true");
+  lb.innerHTML = `
+    <button type="button" class="lb-close" aria-label="Fermer la galerie">&times;</button>
+    <button type="button" class="lb-nav lb-prev" aria-label="Photo précédente">&#8249;</button>
+    <figure class="lb-fig"><img class="lb-img" alt=""><figcaption class="lb-cap"></figcaption></figure>
+    <button type="button" class="lb-nav lb-next" aria-label="Photo suivante">&#8250;</button>
+    <div class="lb-thumbs"></div>`;
+  document.body.appendChild(lb);
+}
+
+function openGallery(car, imgs, opener) {
+  if (!lb) buildLightbox();
+  let i = 0;
+  const imgEl = lb.querySelector(".lb-img");
+  const cap = lb.querySelector(".lb-cap");
+  const thumbs = lb.querySelector(".lb-thumbs");
+  const prev = lb.querySelector(".lb-prev");
+  const next = lb.querySelector(".lb-next");
+  const many = imgs.length > 1;
+
+  function show(n) {
+    i = (n + imgs.length) % imgs.length;
+    imgEl.src = imgs[i];
+    imgEl.alt = `${car.name}, photo ${i + 1} sur ${imgs.length}`;
+    cap.textContent = `${car.name} · ${i + 1} / ${imgs.length}`;
+    thumbs.querySelectorAll("button").forEach((b, k) => b.setAttribute("aria-current", String(k === i)));
+  }
+
+  thumbs.innerHTML = many
+    ? imgs.map((s, k) => `<button type="button" aria-label="Photo ${k + 1}"><img src="${esc(s)}" alt=""></button>`).join("")
+    : "";
+  thumbs.hidden = !many;
+  prev.hidden = next.hidden = !many;
+
+  let x0 = null;
+  const handlers = {
+    key(e) {
+      if (e.key === "Escape") close();
+      else if (many && e.key === "ArrowRight") show(i + 1);
+      else if (many && e.key === "ArrowLeft") show(i - 1);
+    },
+    click(e) {
+      if (e.target.closest(".lb-close") || e.target === lb) close();
+      else if (e.target.closest(".lb-prev")) show(i - 1);
+      else if (e.target.closest(".lb-next")) show(i + 1);
+      else { const b = e.target.closest(".lb-thumbs button"); if (b) show([...thumbs.children].indexOf(b)); }
+    },
+    ts(e) { x0 = e.touches[0].clientX; },
+    te(e) {
+      if (x0 === null || !many) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 50) show(dx < 0 ? i + 1 : i - 1);
+      x0 = null;
+    }
+  };
+
+  function close() {
+    lb.hidden = true;
+    document.body.style.overflow = "";
+    document.removeEventListener("keydown", handlers.key);
+    lb.removeEventListener("click", handlers.click);
+    lb.removeEventListener("touchstart", handlers.ts);
+    lb.removeEventListener("touchend", handlers.te);
+    if (opener) opener.focus();
+  }
+
+  document.addEventListener("keydown", handlers.key);
+  lb.addEventListener("click", handlers.click);
+  lb.addEventListener("touchstart", handlers.ts, { passive: true });
+  lb.addEventListener("touchend", handlers.te);
+  show(0);
+  lb.hidden = false;
+  document.body.style.overflow = "hidden";
+  lb.querySelector(".lb-close").focus();
+}
+
 // --- Cartes des véhicules ---
 function renderFleet() {
   fleetEl.innerHTML = "";
@@ -101,12 +189,17 @@ function renderFleet() {
     card.className = "card";
     const free = car.available !== false;
 
-    const photo = car.image
-      ? `<img src="${esc(car.image)}" alt="${esc(car.name)}">`
-      : carSvg(car.cat);
+    const imgs = carImages(car);
+    const photoBlock = imgs.length
+      ? `<button type="button" class="card-photo has-photo" aria-label="Voir les photos de ${esc(car.name)}">
+           <img class="bg" src="${esc(imgs[0])}" alt="" aria-hidden="true">
+           <img class="main" src="${esc(imgs[0])}" alt="${esc(car.name)}">
+           ${imgs.length > 1 ? `<span class="photo-count">${imgs.length} photos</span>` : ""}
+         </button>`
+      : `<div class="card-photo">${carSvg(car.cat)}</div>`;
 
     card.innerHTML = `
-      <div class="card-photo">${photo}</div>
+      ${photoBlock}
       <div class="card-body">
         <div class="card-head">
           <h3>${esc(car.name)}</h3>
@@ -118,6 +211,9 @@ function renderFleet() {
           ${free ? `<a class="btn" href="#reserver">Réserver</a>` : `<span class="badge-off">Indisponible</span>`}
         </div>
       </div>`;
+
+    const photoBtn = card.querySelector(".has-photo");
+    if (photoBtn) photoBtn.addEventListener("click", () => openGallery(car, imgs, photoBtn));
 
     const btn = card.querySelector(".btn");
     if (btn) btn.addEventListener("click", () => {
@@ -194,7 +290,7 @@ form.addEventListener("submit", (e) => {
     `Nom : ${data.get("nom")}\n` +
     `Téléphone : ${data.get("tel")}`;
 
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+  const url = `https://wa.me/${704890989}?text=${encodeURIComponent(text)}`;
   window.open(url, "_blank", "noopener");
   // Enregistre aussi la demande dans l'espace admin (si Firebase est configuré)
   saveReservation({
