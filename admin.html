@@ -94,14 +94,13 @@
             </div>
           </div>
 
-          <div class="photo-row">
-            <div class="photo-preview" id="photo-preview"><span>Aucune photo</span></div>
-            <div class="field grow">
-              <label for="v-photo">Photo (de préférence PNG sans fond, voiture vue de 3/4)</label>
-              <input id="v-photo" type="file" accept="image/*">
-              <label class="check"><input id="v-available" type="checkbox" checked> Disponible à la location</label>
-            </div>
+          <div class="field">
+            <label for="v-photo">Photos du véhicule <span id="photo-count" class="muted">(0 / 8)</span></label>
+            <input id="v-photo" type="file" accept="image/*" multiple>
+            <p class="hint">Jusqu'à 8 photos : extérieur, intérieur, coffre, tableau de bord… La première est la photo principale affichée sur le menu. Tu peux en choisir plusieurs d'un coup.</p>
+            <div id="photo-grid" class="photo-grid" aria-live="polite"></div>
           </div>
+          <label class="check"><input id="v-available" type="checkbox" checked> Disponible à la location</label>
 
           <div class="actions">
             <button class="btn btn-red" type="submit" id="save-btn">Enregistrer le véhicule</button>

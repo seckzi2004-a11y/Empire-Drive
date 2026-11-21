@@ -63,9 +63,17 @@ code { background: #E9EAEE; padding: 1px 6px; border-radius: 4px; font-size: 0.9
 .check input { width: 18px; height: 18px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; }
 
-.photo-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
-.photo-preview { width: 200px; height: 120px; border-radius: 8px; background: linear-gradient(160deg, #060608, #1A1B23); display: flex; align-items: center; justify-content: center; color: #8A8D98; font-size: 13px; overflow: hidden; flex: none; }
-.photo-preview img { width: 100%; height: 100%; object-fit: contain; }
+.muted { color: var(--muted); font-weight: 400; }
+.hint { font-size: 13px; color: var(--muted); }
+.photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-top: 4px; }
+.photo-grid:empty { display: none; }
+.pitem { position: relative; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--white); display: flex; flex-direction: column; }
+.pitem.main { border-color: var(--red); box-shadow: 0 0 0 1px var(--red); }
+.pthumb { height: 86px; background: linear-gradient(160deg, #060608, #1A1B23); }
+.pthumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.pbadge { position: absolute; top: 6px; left: 6px; font-size: 11px; font-weight: 600; background: var(--red); color: var(--white); padding: 2px 8px; border-radius: 999px; }
+.pbtns { display: flex; gap: 4px; padding: 6px; flex-wrap: wrap; }
+.pbtns .btn { flex: 1 1 auto; padding: 6px 8px; font-size: 12px; }
 .actions { display: flex; flex-wrap: wrap; gap: 12px; }
 
 .link-btn { font: inherit; font-size: 14px; background: none; border: 0; color: var(--red-dark); text-decoration: underline; cursor: pointer; padding: 4px 0; text-align: left; }
